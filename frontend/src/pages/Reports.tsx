@@ -1,6 +1,5 @@
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, CartesianGrid } from "recharts";
 import { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
-
 const COLORS = ["#3b82f6","#22c55e","#f59e0b","#ef4444","#6366f1"];
 
 export default function Reports() {
