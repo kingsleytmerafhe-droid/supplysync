@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 import pandas as pd
+import os
+import subprocess
 
 app = FastAPI(title="SupplySync API")
 
@@ -12,6 +14,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Auto-create database if it doesn't exist
+if not os.path.exists("supplysync.db"):
+    print("🔄 Database not found — running pipeline...")
+    subprocess.run(["python", "data/pipeline.py"])
+    print("✅ Database created!")
 
 DB = "supplysync.db"
 
