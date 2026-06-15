@@ -8,6 +8,7 @@ app = FastAPI(title="SupplySync API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -32,10 +33,7 @@ def get_stats():
     on_time      = total - delayed
     on_time_rate = round(on_time / total * 100, 1)
     total_value  = round(df["total_cost"].sum(), 2)
-
-    suppliers_df = query("SELECT * FROM suppliers")
     pending      = len(df[df["delivery_status"].str.lower() == "pending"])
-
     return {
         "active_shipments":  total,
         "low_stock_items":   delayed,
