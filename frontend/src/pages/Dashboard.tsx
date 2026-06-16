@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { getStats, getShipments, getWarehouse, getOrders } from "../api/client";
+import { getStats, getShipments, getWarehouse, getOrders, BASE } from "../api/client";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import ShipmentMap from "../components/ShipmentMap";
 
 const COLORS = ["#3b82f6","#22c55e","#f59e0b","#ef4444","#6366f1"];
 
-// Glass card style
 const glass = {
   background: "rgba(15,23,42,0.75)",
   backdropFilter: "blur(16px)",
@@ -44,7 +43,6 @@ function DashboardHome({ stats, shipments, warehouse, orders, suppliers, supplie
     <div style={{ padding:"24px 28px" }}>
       <h1 style={{ fontSize:24, fontWeight:700, marginBottom:22, color:txt.primary }}>Dashboard</h1>
 
-      {/* KPI CARDS */}
       <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:14, marginBottom:22 }}>
         {CARD_CFG.map(c => (
           <div key={c.key} style={{ ...glass, padding:"18px 20px", borderTop:`3px solid ${c.color}` }}>
@@ -55,7 +53,6 @@ function DashboardHome({ stats, shipments, warehouse, orders, suppliers, supplie
         ))}
       </div>
 
-      {/* MIDDLE ROW */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 300px", gap:14, marginBottom:22 }}>
         <div style={{ ...glass, padding:20 }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:14 }}>
@@ -107,7 +104,6 @@ function DashboardHome({ stats, shipments, warehouse, orders, suppliers, supplie
         </div>
       </div>
 
-      {/* BOTTOM ROW */}
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
         <div style={{ ...glass, padding:20 }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:14 }}>
@@ -170,7 +166,7 @@ function DashboardHome({ stats, shipments, warehouse, orders, suppliers, supplie
 // ─── SHIPMENTS PAGE ───────────────────────────────────────────────
 function ShipmentsPage() {
   const [shipments, setShipments] = useState<any[]>([]);
-  useEffect(() => { fetch("http://127.0.0.1:8000/api/shipments").then(r=>r.json()).then(setShipments); }, []);
+  useEffect(() => { fetch(`${BASE}/api/shipments`).then(r=>r.json()).then(setShipments); }, []);
   return (
     <div style={{ padding:"24px 28px" }}>
       <h1 style={{ fontSize:24, fontWeight:700, marginBottom:6, color:txt.primary }}>Shipments</h1>
@@ -221,7 +217,7 @@ function ShipmentsPage() {
 // ─── INVENTORY PAGE ───────────────────────────────────────────────
 function InventoryPage() {
   const [warehouse, setWarehouse] = useState<any[]>([]);
-  useEffect(() => { fetch("http://127.0.0.1:8000/api/warehouse").then(r=>r.json()).then(setWarehouse); }, []);
+  useEffect(() => { fetch(`${BASE}/api/warehouse`).then(r=>r.json()).then(setWarehouse); }, []);
   return (
     <div style={{ padding:"24px 28px" }}>
       <h1 style={{ fontSize:24, fontWeight:700, marginBottom:6, color:txt.primary }}>Inventory</h1>
@@ -266,7 +262,7 @@ function InventoryPage() {
 // ─── SUPPLIERS PAGE ───────────────────────────────────────────────
 function SuppliersPage() {
   const [suppliers, setSuppliers] = useState<any[]>([]);
-  useEffect(() => { fetch("http://127.0.0.1:8000/api/suppliers").then(r=>r.json()).then(setSuppliers); }, []);
+  useEffect(() => { fetch(`${BASE}/api/suppliers`).then(r=>r.json()).then(setSuppliers); }, []);
   return (
     <div style={{ padding:"24px 28px" }}>
       <h1 style={{ fontSize:24, fontWeight:700, marginBottom:6, color:txt.primary }}>Suppliers</h1>
@@ -318,7 +314,7 @@ function SuppliersPage() {
 // ─── ORDERS PAGE ──────────────────────────────────────────────────
 function OrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
-  useEffect(() => { fetch("http://127.0.0.1:8000/api/orders").then(r=>r.json()).then(setOrders); }, []);
+  useEffect(() => { fetch(`${BASE}/api/orders`).then(r=>r.json()).then(setOrders); }, []);
   return (
     <div style={{ padding:"24px 28px" }}>
       <h1 style={{ fontSize:24, fontWeight:700, marginBottom:6, color:txt.primary }}>Orders</h1>
@@ -365,8 +361,8 @@ function ReportsPage() {
   const [suppliers, setSuppliers] = useState<any[]>([]);
   const [shipments, setShipments] = useState<any[]>([]);
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/suppliers").then(r=>r.json()).then(setSuppliers);
-    fetch("http://127.0.0.1:8000/api/shipments").then(r=>r.json()).then(setShipments);
+    fetch(`${BASE}/api/suppliers`).then(r=>r.json()).then(setSuppliers);
+    fetch(`${BASE}/api/shipments`).then(r=>r.json()).then(setShipments);
   }, []);
 
   const methodData = Object.entries(
@@ -445,7 +441,7 @@ export default function Dashboard() {
     getShipments().then(setShipments);
     getWarehouse().then(setWarehouse);
     getOrders().then(setOrders);
-    fetch("http://127.0.0.1:8000/api/suppliers").then(r=>r.json()).then(setSuppliers);
+    fetch(`${BASE}/api/suppliers`).then(r=>r.json()).then(setSuppliers);
   }, []);
 
   const supplierChartData = suppliers.map(s => ({
@@ -457,7 +453,6 @@ export default function Dashboard() {
   return (
     <div style={{ display:"flex", height:"100vh", overflow:"hidden", background:"transparent" }}>
 
-      {/* SIDEBAR */}
       <aside style={{ width:230, flexShrink:0, background:"rgba(15,23,42,0.85)", backdropFilter:"blur(16px)", borderRight:"1px solid rgba(255,255,255,0.07)", display:"flex", flexDirection:"column" }}>
         <div style={{ padding:"22px 20px 18px", borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
           <div style={{ display:"flex", alignItems:"center", gap:10 }}>
@@ -467,7 +462,6 @@ export default function Dashboard() {
             <span style={{ fontWeight:700, fontSize:17, color:"#f1f5f9", letterSpacing:"-0.3px" }}>SupplySync</span>
           </div>
         </div>
-
         <nav style={{ flex:1, padding:"10px 10px 0" }}>
           {NAV.map(n => {
             const active = activeNav === n.label;
@@ -480,7 +474,6 @@ export default function Dashboard() {
             );
           })}
         </nav>
-
         <div style={{ padding:"10px 10px 16px", borderTop:"1px solid rgba(255,255,255,0.07)" }}>
           {[{ label:"Settings", icon:"⚙" },{ label:"Help", icon:"?" }].map(n => (
             <div key={n.label} style={{ display:"flex", alignItems:"center", gap:11, padding:"10px 12px", borderRadius:9, cursor:"pointer", color:"#475569", fontSize:14 }}>
@@ -490,10 +483,7 @@ export default function Dashboard() {
         </div>
       </aside>
 
-      {/* MAIN */}
       <div style={{ flex:1, display:"flex", flexDirection:"column", overflow:"hidden" }}>
-
-        {/* Topbar */}
         <header style={{ background:"rgba(15,23,42,0.85)", backdropFilter:"blur(16px)", borderBottom:"1px solid rgba(255,255,255,0.07)", padding:"12px 28px", display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
           <div style={{ position:"relative" }}>
             <span style={{ position:"absolute", left:12, top:"50%", transform:"translateY(-50%)", color:"#475569", fontSize:14 }}>🔍</span>
@@ -518,7 +508,6 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* Pages */}
         <main style={{ flex:1, overflowY:"auto", background:"transparent" }}>
           {activeNav==="Dashboard" && <DashboardHome stats={stats} shipments={shipments} warehouse={warehouse} orders={orders} suppliers={suppliers} supplierChartData={supplierChartData} />}
           {activeNav==="Shipments" && <ShipmentsPage />}
